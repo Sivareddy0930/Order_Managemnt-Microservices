@@ -7,6 +7,7 @@ import com.ordermanagement.customerservice.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     private ModelMapper modelMapper;
+
+    private RestTemplate restTemplate;
 
     @Override
     public CustomerDto createCustomer(CustomerDto customerDto) {
@@ -34,6 +37,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDto getCustomerById(Long customerId) {
         Customer customer = customerRepository.findByCustomerId(customerId).orElseThrow();
+
+        restTemplate.getForEntity()
 
         CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
 
