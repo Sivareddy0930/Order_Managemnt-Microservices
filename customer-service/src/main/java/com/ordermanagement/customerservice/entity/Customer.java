@@ -24,4 +24,6 @@ public class Customer {
     private String customerEmail;
     @Column(unique = true,nullable = false)
     private String customerContact;
+    @Column(unique = true,nullable = false)
+    private Long productId;
 }

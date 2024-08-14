@@ -15,4 +15,5 @@ public class CustomerDto {
     private String customerName;
     private String customerEmail;
     private String customerContact;
+    private Long productId;
 }

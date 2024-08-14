@@ -1,5 +1,6 @@
 package com.ordermanagement.customerservice.controller;
 
+import com.ordermanagement.customerservice.dto.ApiResponseDto;
 import com.ordermanagement.customerservice.dto.CustomerDto;
 import com.ordermanagement.customerservice.service.CustomerService;
 import lombok.AllArgsConstructor;
@@ -21,10 +22,10 @@ public class CustomerController {
     }
 
     @GetMapping("/getCustomerById/{customerId}")
-    public ResponseEntity<CustomerDto> getCustomerById(@PathVariable Long customerId){
-        CustomerDto customerDto = customerService.getCustomerById(customerId);
+    public ResponseEntity<ApiResponseDto> getCustomerById(@PathVariable Long customerId){
+        ApiResponseDto apiResponseDto = customerService.getCustomerById(customerId);
 
-        return ResponseEntity.ok(customerDto);
+        return ResponseEntity.ok(apiResponseDto);
     }
 
 }
