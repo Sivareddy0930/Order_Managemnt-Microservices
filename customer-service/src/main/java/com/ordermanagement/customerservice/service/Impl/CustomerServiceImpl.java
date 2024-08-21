@@ -7,6 +7,8 @@ import com.ordermanagement.customerservice.entity.Customer;
 import com.ordermanagement.customerservice.repositorty.CustomerRepository;
 import com.ordermanagement.customerservice.service.APIClient;
 import com.ordermanagement.customerservice.service.CustomerService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -29,7 +31,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     private WebClient webClient;
 
-    private final APIClient apiClient;
+//    private final APIClient apiClient;
 
     @Override
     public CustomerDto createCustomer(CustomerDto customerDto) {
@@ -43,8 +45,16 @@ public class CustomerServiceImpl implements CustomerService {
         return savedCustomerDto;
     }
 
+
+
+
+//    @CircuitBreaker(name = "${spring.application.name}",fallbackMethod = "getDefaultProduct")
+    @Retry(name = "${spring.application.name}",fallbackMethod = "getDefaultProduct")
     @Override
     public ApiResponseDto getCustomerById(Long customerId) {
+
+        log.info("Inside getCustomerById method");
+
         Customer customer = customerRepository.findByCustomerId(customerId).orElseThrow();
 
         CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
@@ -57,13 +67,36 @@ public class CustomerServiceImpl implements CustomerService {
 
 //        get product using WebClient
 
-//        ProductDto productDto = webClient.get()
-//                .uri("http://localhost:9090/api/products/getProductById/" + customer.getProductId())
-//                .retrieve()
-//                .bodyToMono(ProductDto.class)
-//                .block();
+        ProductDto productDto = webClient.get()
+                .uri("http://localhost:9090/api/products/getProductById/" + customer.getProductId())
+                .retrieve()
+                .bodyToMono(ProductDto.class)
+                .block();
 
-        ProductDto productDto = apiClient.getProductByProductId(customer.getProductId());
+//        ProductDto productDto = apiClient.getProductByProductId(customer.getProductId());
+
+
+        ApiResponseDto apiResponseDto =new ApiResponseDto();
+        apiResponseDto.setCustomer(customerDto);
+        apiResponseDto.setProduct(productDto);
+
+
+        return apiResponseDto;
+    }
+
+
+
+    public ApiResponseDto getDefaultProduct(Long customerId,Exception exception) {
+
+        log.info("Inside getDefaultProduct method");
+        Customer customer = customerRepository.findByCustomerId(customerId).orElseThrow();
+
+        CustomerDto customerDto = modelMapper.map(customer, CustomerDto.class);
+
+        ProductDto productDto =new ProductDto();
+        productDto.setProductId(1111l);
+        productDto.setProductName("DefaultProduct");
+        productDto.setProductPrice(10000.00);
 
 
         ApiResponseDto apiResponseDto =new ApiResponseDto();
