@@ -2,6 +2,7 @@ package com.ordermanagement.customerservice.service.Impl;
 
 import com.ordermanagement.customerservice.dto.ApiResponseDto;
 import com.ordermanagement.customerservice.dto.CustomerDto;
+import com.ordermanagement.customerservice.dto.InventoryDto;
 import com.ordermanagement.customerservice.dto.ProductDto;
 import com.ordermanagement.customerservice.entity.Customer;
 import com.ordermanagement.customerservice.repositorty.CustomerRepository;
@@ -76,9 +77,19 @@ public class CustomerServiceImpl implements CustomerService {
 //        ProductDto productDto = apiClient.getProductByProductId(customer.getProductId());
 
 
+
+        InventoryDto inventoryDto = webClient.get()
+                .uri("http://localhost:1010/api/inventory/getInventory/" + customer.getProductId())
+                .retrieve()
+                .bodyToMono(InventoryDto.class)
+                .block();
+
+
+
         ApiResponseDto apiResponseDto =new ApiResponseDto();
         apiResponseDto.setCustomer(customerDto);
         apiResponseDto.setProduct(productDto);
+        apiResponseDto.setInventory(inventoryDto);
 
 
         return apiResponseDto;

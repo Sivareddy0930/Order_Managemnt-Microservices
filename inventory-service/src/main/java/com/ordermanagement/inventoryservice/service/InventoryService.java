@@ -7,6 +7,6 @@ import java.util.Optional;
 public interface InventoryService {
     InventoryDto saveInventory(InventoryDto inventoryDto);
 
-    InventoryDto getByInventoryId(Long inventoryId);
+    InventoryDto getByProductId(Long productId);
 
 }

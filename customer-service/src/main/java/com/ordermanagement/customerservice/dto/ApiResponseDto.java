@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class ApiResponseDto {
     private CustomerDto customer;
     private ProductDto product;
+    private InventoryDto inventory;
 }

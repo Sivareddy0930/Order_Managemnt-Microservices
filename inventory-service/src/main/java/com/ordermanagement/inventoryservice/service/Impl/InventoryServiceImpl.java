@@ -28,10 +28,12 @@ public class InventoryServiceImpl implements InventoryService {
     }
 
     @Override
-    public InventoryDto getByInventoryId(Long inventoryId) {
-        Optional<Inventory> optionalInventory = inventoryRepository.findByInventoryId(inventoryId);
+    public InventoryDto getByProductId(Long productId) {
+        Optional<Inventory> optionalInventory = inventoryRepository.findByProductId(productId);
         Inventory inventory = optionalInventory.get();
         InventoryDto inventoryDto = modelMapper.map(inventory, InventoryDto.class);
         return inventoryDto;
     }
+
+
 }
